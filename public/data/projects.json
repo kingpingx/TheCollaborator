@@ -22,24 +22,40 @@
     },
     "alsoNote": "A repository can set its own status with a GitHub topic like 'status-live' or 'status-wip', which is handy for repos you do not want to list here."
   },
-
-  "featured": [],
-
-  "hidden": ["kingpingx"],
-
+  "featured": [
+    "Bouncing-Ball",
+    "kingpingx.github.io",
+    "TheColloborator"
+  ],
+  "hidden": [
+    "kingpingx"
+  ],
   "overrides": {
-    "example-repo": {
-      "displayName": "Example Project",
-      "tagline": "Delete this entry — it is here to show the shape of an override.",
-      "longDescription": "A longer write-up shown on the detail page.\n\nIt supports a few Markdown basics: **bold**, `inline code` and [links](https://example.com).\n\n- bullet points\n- work too",
-      "status": "wip",
-      "demoUrl": "https://example.com",
-      "embeddable": false,
-      "media": [{ "type": "image", "src": "media/example-1.png", "caption": "The main screen" }],
-      "techStack": ["Angular", "TypeScript", "Tailwind"],
-      "lookingForHelp": true,
-      "helpNotes": "Needs test coverage and a proper error state on the settings page.",
-      "roadmap": ["Offline support", "Keyboard shortcuts", "Export to CSV"]
+    "Bouncing-Ball": {
+      "displayName": "Bouncing Ball",
+      "tagline": "A coordinate-geometry bouncing ball simulation you can run in the browser.",
+      "status": "live",
+      "demoUrl": "https://kingpingx.github.io/Bouncing-Ball/web/",
+      "embeddable": true,
+      "techStack": [
+        "JavaScript",
+        "Canvas",
+        "Python",
+        "HTML"
+      ],
+      "longDescription": "A ball bouncing under simple physics, worked out from coordinate geometry rather than a game engine.\n\nThe repository holds a Python (turtle) version; the demo above is the browser build, drawn on a `<canvas>` with the physics in a separate module."
+    },
+    "kingpingx.github.io": {
+      "displayName": "Personal Site",
+      "tagline": "My portfolio — bio, experience, education and contact.",
+      "status": "live",
+      "demoUrl": "https://kingpingx.github.io",
+      "embeddable": true,
+      "techStack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ]
     }
   }
 }
