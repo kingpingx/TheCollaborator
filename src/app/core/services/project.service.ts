@@ -294,6 +294,7 @@ export class ProjectService {
       helpNotes: override?.helpNotes ?? null,
       roadmap: override?.roadmap ?? [],
       goodFirstIssues: snap?.goodFirstIssues ?? [],
+      featureIdeas: snap?.featureIdeas ?? [],
       hasContributing: snap?.hasContributing ?? false,
       defaultBranch: repo.default_branch || 'main',
 

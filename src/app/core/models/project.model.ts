@@ -142,6 +142,8 @@ export interface Project {
   helpNotes: string | null;
   roadmap: string[];
   goodFirstIssues: GithubIssue[];
+  /** Community-suggested features, read from labelled GitHub issues. */
+  featureIdeas: GithubIssue[];
   hasContributing: boolean;
   defaultBranch: string;
 

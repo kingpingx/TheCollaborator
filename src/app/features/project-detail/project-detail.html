@@ -187,6 +187,8 @@
           }
         </section>
 
+        <app-feature-ideas [project]="p" [live]="liveIdeas()" />
+
         @if (p.readmeHtml) {
           <section>
             <h2 class="text-content text-lg font-bold tracking-tight">From the README</h2>

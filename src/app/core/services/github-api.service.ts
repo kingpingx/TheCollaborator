@@ -57,24 +57,40 @@ export class GithubApiService {
   }
 
   /**
-   * Open issues labelled for newcomers. Pull requests share the issues
+   * Open issues carrying a given label. Pull requests share the issues
    * endpoint, so they are filtered out here.
    */
-  listGoodFirstIssues(owner: string, repo: string): Observable<GithubIssue[]> {
+  listIssuesByLabel(
+    owner: string,
+    repo: string,
+    label: string,
+    perPage: number,
+  ): Observable<GithubIssue[]> {
     const url = `${this.config.apiBase}/repos/${owner}/${repo}/issues`;
     return this.http
       .get<GithubIssue[]>(url, {
         headers: HEADERS,
-        params: {
-          state: 'open',
-          labels: 'good first issue',
-          per_page: String(this.config.maxGoodFirstIssues),
-        },
+        params: { state: 'open', labels: label, per_page: String(perPage) },
       })
       .pipe(
         map((issues) => (issues ?? []).filter((i) => !i.pull_request)),
         catchError((err) => throwError(() => this.classify(err))),
       );
+  }
+
+  /** Issues labelled for newcomers. */
+  listGoodFirstIssues(owner: string, repo: string): Observable<GithubIssue[]> {
+    return this.listIssuesByLabel(owner, repo, 'good first issue', this.config.maxGoodFirstIssues);
+  }
+
+  /** Community-suggested features. */
+  listFeatureIdeas(owner: string, repo: string): Observable<GithubIssue[]> {
+    return this.listIssuesByLabel(
+      owner,
+      repo,
+      this.config.featureLabel,
+      this.config.maxFeatureIdeas,
+    );
   }
 
   /**

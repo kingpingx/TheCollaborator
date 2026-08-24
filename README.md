@@ -116,6 +116,32 @@ detected automatically and you would get a blank box. Projects that can't be
 embedded fall back to the screenshot gallery, then to a plain "open in new tab"
 button.
 
+## Feature ideas
+
+Every project page carries a **Feature ideas** panel where anyone can propose a
+new feature, and where ideas already proposed are listed.
+
+There is no backend, so GitHub Issues *is* the store:
+
+- **Submitting** — the form takes a title, optional detail, and an email
+  (required). It composes those into a pre-filled `issues/new` URL and opens
+  GitHub, where the visitor reviews and presses Submit. Nothing is sent without
+  them seeing it.
+- **Attribution** — the email is written into the issue body, so you can always
+  see who ideated it.
+- **Listing** — the panel reads open issues labelled `enhancement` back out of
+  the API and shows them, credited to the proposer's **GitHub username**. The
+  email is deliberately never rendered on the page; publishing addresses on a
+  public site invites scraping.
+
+One wrinkle worth knowing: GitHub ignores the `labels` URL parameter for anyone
+without write access to the repo. So an outside suggestion arrives unlabelled
+and won't appear in the list until you tag it `enhancement`. The form says as
+much rather than implying it shows up instantly.
+
+Change the label or how many are listed via `featureLabel` and `maxFeatureIdeas`
+in `src/app/core/config/app-config.ts`.
+
 ## Why a snapshot
 
 GitHub allows **60 unauthenticated API requests per hour per IP**, which a public

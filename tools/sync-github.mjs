@@ -26,6 +26,7 @@ const API = 'https://api.github.com';
 const CONCURRENCY = 4;
 const README_MAX_BYTES = 60_000;
 const GOOD_FIRST_LABEL = 'good first issue';
+const FEATURE_LABEL = 'enhancement';
 
 const args = process.argv.slice(2);
 const flag = (name) => args.some((a) => a === `--${name}`);
@@ -120,14 +121,34 @@ function absolutizeReadme(html, repo) {
 
 // --- per-repo enrichment ---------------------------------------------------
 
+/** Issues arrive with far more than the app declares; keep only that. */
+function slimIssues(issues) {
+  return (issues ?? [])
+    .filter((i) => !i.pull_request)
+    .map(({ id, number, title, html_url, state, comments, created_at, labels, user }) => ({
+      id,
+      number,
+      title,
+      html_url,
+      state,
+      comments,
+      created_at,
+      labels: (labels ?? []).map((l) =>
+        typeof l === 'string' ? l : { name: l.name, color: l.color },
+      ),
+      user: user ? { login: user.login, avatar_url: user.avatar_url, html_url: user.html_url } : null,
+    }));
+}
+
 async function enrich(repo, wantsReadme) {
   const languages = (await api(`/repos/${repo.full_name}/languages`)) ?? {};
 
-  const issues =
-    (await api(
-      `/repos/${repo.full_name}/issues?state=open&per_page=5` +
-        `&labels=${encodeURIComponent(GOOD_FIRST_LABEL)}`,
-    )) ?? [];
+  const issuesUrl = (label, perPage) =>
+    `/repos/${repo.full_name}/issues?state=open&per_page=${perPage}` +
+    `&labels=${encodeURIComponent(label)}`;
+
+  const issues = await api(issuesUrl(GOOD_FIRST_LABEL, 5));
+  const ideas = await api(issuesUrl(FEATURE_LABEL, 8));
 
   let readmeHtml = null;
   let hasContributing = false;
@@ -150,18 +171,8 @@ async function enrich(repo, wantsReadme) {
   return {
     ...repo,
     languages,
-    goodFirstIssues: (issues ?? [])
-      .filter((i) => !i.pull_request)
-      .map(({ id, number, title, html_url, state, comments, created_at, labels }) => ({
-        id,
-        number,
-        title,
-        html_url,
-        state,
-        comments,
-        created_at,
-        labels: (labels ?? []).map((l) => (typeof l === 'string' ? l : { name: l.name, color: l.color })),
-      })),
+    goodFirstIssues: slimIssues(issues),
+    featureIdeas: slimIssues(ideas),
     readmeHtml,
     hasContributing,
   };
@@ -268,10 +279,12 @@ async function main() {
   const kb = Math.round(JSON.stringify(snapshot).length / 1024);
   const withReadme = enriched.filter((r) => r.readmeHtml).length;
   const withIssues = enriched.reduce((n, r) => n + r.goodFirstIssues.length, 0);
+  const withIdeas = enriched.reduce((n, r) => n + r.featureIdeas.length, 0);
 
   console.log(
     `\n> Wrote public/data/repos-snapshot.json (${kb} kB)\n` +
-      `  ${enriched.length} repos · ${withReadme} READMEs · ${withIssues} good first issues\n` +
+      `  ${enriched.length} repos · ${withReadme} READMEs · ${withIssues} good first issues` +
+      ` · ${withIdeas} feature ideas\n` +
       `  ${requestCount} API requests used${token ? ' (authenticated)' : ''}`,
   );
 }

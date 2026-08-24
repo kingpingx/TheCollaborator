@@ -45,6 +45,7 @@ function snapshot(repos: GithubRepo[]): RepoSnapshot {
       ...r,
       languages: { TypeScript: 900, CSS: 100 },
       goodFirstIssues: [],
+      featureIdeas: [],
       readmeHtml: null,
       hasContributing: false,
     })),

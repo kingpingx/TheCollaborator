@@ -11,6 +11,7 @@ import { ProjectService } from '../../core/services/project.service';
 import { SeoService } from '../../core/services/seo.service';
 import { DemoFrame } from '../../shared/ui/demo-frame';
 import { EmptyState } from '../../shared/ui/empty-state';
+import { FeatureIdeas } from '../../shared/ui/feature-ideas';
 import { Icon } from '../../shared/ui/icon';
 import { SkeletonCard } from '../../shared/ui/skeleton-card';
 import { StatusBadge } from '../../shared/ui/status-badge';
@@ -20,7 +21,16 @@ import { renderMiniMarkdown } from '../../shared/util/mini-markdown';
 @Component({
   selector: 'app-project-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, Icon, StatusBadge, TechChip, DemoFrame, EmptyState, SkeletonCard],
+  imports: [
+    RouterLink,
+    Icon,
+    StatusBadge,
+    TechChip,
+    DemoFrame,
+    EmptyState,
+    SkeletonCard,
+    FeatureIdeas,
+  ],
   templateUrl: './project-detail.html',
   host: { class: 'block' },
 })
@@ -47,6 +57,7 @@ export class ProjectDetail {
 
   /** Issues refreshed live for this one repo; falls back to the snapshot's. */
   private readonly liveIssues = signal<GithubIssue[] | null>(null);
+  protected readonly liveIdeas = signal<GithubIssue[] | null>(null);
 
   protected readonly goodFirstIssues = computed<GithubIssue[]>(
     () => this.liveIssues() ?? this.project()?.goodFirstIssues ?? [],
@@ -97,16 +108,25 @@ export class ProjectDetail {
   }
 
   /**
-   * One extra API call, only on the page that shows the result. Failures are
-   * swallowed: the snapshot's issue list is already good enough.
+   * Two extra API calls, only on the page that shows the results. Failures are
+   * swallowed: the snapshot's lists are already good enough, and burning the
+   * visitor's hourly quota on a detail page is not worth an error state.
    */
   private async refreshIssues(project: Project): Promise<void> {
     const owner = this.config.githubUsername.trim();
     if (!owner) return;
 
+    this.liveIssues.set(null);
+    this.liveIdeas.set(null);
+
     this.api.listGoodFirstIssues(owner, project.name).subscribe({
       next: (issues) => this.liveIssues.set(issues),
       error: () => this.liveIssues.set(null),
+    });
+
+    this.api.listFeatureIdeas(owner, project.name).subscribe({
+      next: (ideas) => this.liveIdeas.set(ideas),
+      error: () => this.liveIdeas.set(null),
     });
   }
 

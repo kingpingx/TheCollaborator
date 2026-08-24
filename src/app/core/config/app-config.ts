@@ -26,6 +26,12 @@ export interface AppConfig {
 
   /** How many "good first issues" to list on a project page. */
   readonly maxGoodFirstIssues: number;
+
+  /** Label that marks an issue as a community feature idea. */
+  readonly featureLabel: string;
+
+  /** How many feature ideas to list on a project page. */
+  readonly maxFeatureIdeas: number;
 }
 
 export const APP_CONFIG = new InjectionToken<AppConfig>('APP_CONFIG');
@@ -39,4 +45,6 @@ export const appConfigValue: AppConfig = {
   overridesPath: 'data/projects.json',
   ownerName: 'Prabal Pandey',
   maxGoodFirstIssues: 5,
+  featureLabel: 'enhancement',
+  maxFeatureIdeas: 8,
 };

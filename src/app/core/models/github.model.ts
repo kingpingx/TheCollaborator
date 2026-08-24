@@ -36,6 +36,8 @@ export interface GithubIssue {
   comments: number;
   created_at: string;
   labels: Array<{ name: string; color: string } | string>;
+  /** Who opened it — the attribution shown next to a community idea. */
+  user?: { login: string; avatar_url: string; html_url: string } | null;
   /** Present on pull requests; used to filter them out of issue lists. */
   pull_request?: unknown;
 }
@@ -69,6 +71,8 @@ export interface RepoSnapshot {
 export interface SnapshotRepo extends GithubRepo {
   languages: GithubLanguages;
   goodFirstIssues: GithubIssue[];
+  /** Open issues carrying the configured feature label. */
+  featureIdeas: GithubIssue[];
   readmeHtml: string | null;
   hasContributing: boolean;
 }
