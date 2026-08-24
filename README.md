@@ -1,5 +1,7 @@
 # The Colloborator
 
+### 🔗 [kingpingx.github.io/TheColloborator](https://kingpingx.github.io/TheColloborator/)
+
 **The Colloborator is a website that showcases my GitHub projects.**
 
 A GitHub profile is a list of repository names. It doesn't tell you which
@@ -164,8 +166,22 @@ which raises the budget to 5000 requests/hour.
 publishes on every push to `main`, plus once daily so the snapshot stays fresh.
 
 1. Push this repository to GitHub.
-2. **Settings → Pages → Source: GitHub Actions**.
-3. Push to `main`.
+2. **Settings → Pages → Build and deployment → Source: `GitHub Actions`**.
+3. Push to `main`, or re-run the last workflow.
+
+> **Pick `GitHub Actions`, not `Deploy from a branch`.** The branch option
+> hands the repository to Jekyll, which renders this README as the site: you
+> get a page that returns 200 but is not the app, and every deep link and
+> `data/*.json` request 404s. If the deployed page's `<head>` contains
+> `<meta name="generator" content="Jekyll ...">` and no `<app-root>`, that is
+> what happened.
+>
+> Enabling Pages has to be done by hand once — it cannot be automated from the
+> workflow. `actions/configure-pages` with `enablement: true` fails with
+> *"Resource not accessible by integration"*, because creating a Pages site
+> needs admin rights that `GITHUB_TOKEN` is never granted. Until Pages is
+> enabled the build job passes and only the deploy job fails, with
+> *"Failed to create deployment (status: 404)"*.
 
 The workflow derives `--base-href` from the repository name, so it works whether
 you deploy to `user.github.io/collaborator/` or to a root domain. It also copies
