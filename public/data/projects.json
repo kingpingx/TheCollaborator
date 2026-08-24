@@ -23,7 +23,7 @@
     "alsoNote": "A repository can set its own status with a GitHub topic like 'status-live' or 'status-wip', which is handy for repos you do not want to list here."
   },
   "featured": [
-    "TheColloborator",
+    "TheCollaborator",
     "Bouncing-Ball",
     "kingpingx.github.io"
   ],
@@ -31,6 +31,36 @@
     "kingpingx"
   ],
   "overrides": {
+    "New-Portfolio": {
+      "displayName": "Portfolio v2",
+      "tagline": "A single-page Angular rebuild of my first HTML portfolio.",
+      "status": "live",
+      "demoUrl": "https://angular-portfolio-1o32.onrender.com/",
+      "embeddable": true,
+      "techStack": [
+        "Angular",
+        "TypeScript",
+        "SCSS",
+        "Django"
+      ],
+      "longDescription": "A personal portfolio: one scrolling page covering about, education, experience, projects and contact.\n\nThis is the second version. The first, [htmlPortfolio](https://github.com/kingpingx/htmlPortfolio), was loose HTML and CSS files opened straight from disk. This one moves the same content into an Angular project with a real build step, SCSS instead of a flat stylesheet, and npm-managed dependencies.\n\nThe repository also carries a small Django wrapper, but it has no models and no API — it only serves the compiled build, which is why the demo can be hosted as a plain static site."
+    },
+    "Basic-Banking-System": {
+      "displayName": "Basic Banking System",
+      "tagline": "A Django banking dashboard — customers, transfers and a transaction log.",
+      "status": "live",
+      "demoUrl": "https://basic-banking-system-emud.onrender.com/",
+      "embeddable": false,
+      "techStack": [
+        "Django",
+        "Python",
+        "PostgreSQL",
+        "Bootstrap"
+      ],
+      "longDescription": "A small internal banking tool, written as The Sparks Foundation internship task.\n\nRegister customers with an opening balance, look them up, move money between any two of them, and read back the log of every transfer.\n\nA transfer only commits when the sender and receiver differ, the amount is positive, and the sender’s balance covers it — otherwise the form re-renders and no balance moves. Each successful transfer debits, credits and writes a timestamped transaction row.\n\nThe demo sends `X-Frame-Options: DENY`, so it cannot be embedded here and opens in a new tab instead.",
+      "lookingForHelp": true,
+      "helpNotes": "The transfer view could use server-side form validation and a confirmation step before any money moves."
+    },
     "Bouncing-Ball": {
       "displayName": "Bouncing Ball",
       "tagline": "A coordinate-geometry bouncing ball simulation you can run in the browser.",
@@ -57,7 +87,7 @@
         "JavaScript"
       ]
     },
-    "TheColloborator": {
+    "TheCollaborator": {
       "displayName": "The Collaborator",
       "tagline": "This site — a self-updating showcase of my GitHub projects.",
       "status": "live",
