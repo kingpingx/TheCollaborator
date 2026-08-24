@@ -23,9 +23,9 @@
     "alsoNote": "A repository can set its own status with a GitHub topic like 'status-live' or 'status-wip', which is handy for repos you do not want to list here."
   },
   "featured": [
+    "TheColloborator",
     "Bouncing-Ball",
-    "kingpingx.github.io",
-    "TheColloborator"
+    "kingpingx.github.io"
   ],
   "hidden": [
     "kingpingx"
@@ -55,6 +55,27 @@
         "HTML",
         "CSS",
         "JavaScript"
+      ]
+    },
+    "TheColloborator": {
+      "displayName": "Collaborator",
+      "tagline": "This site — a self-updating showcase of my GitHub projects.",
+      "status": "wip",
+      "embeddable": true,
+      "techStack": [
+        "Angular",
+        "TypeScript",
+        "Tailwind CSS",
+        "GitHub Actions"
+      ],
+      "longDescription": "The site you are looking at right now.\n\nA GitHub profile is a list of repository names. It does not tell you which projects are finished, which you can actually try, or which would welcome help. Collaborator is the page that answers those questions.\n\nThe project list is read straight from the GitHub API, so pushing a new repository is enough to make it appear here — there is no list to maintain by hand. A small curated file adds what GitHub cannot store: status, demo URL, screenshots, and what specifically needs doing.\n\nIt is a static Angular app with no backend. Feature ideas become GitHub issues, and the offline snapshot means the page still renders when the API is rate-limited.",
+      "lookingForHelp": true,
+      "helpNotes": "Ideas for what a project showcase should surface are especially welcome — as are screenshots and better descriptions for any project listed here.",
+      "roadmap": [
+        "Screenshot galleries for the projects that cannot be embedded",
+        "Prerender each project page so links preview properly when shared",
+        "A tag/topic filter alongside language and status",
+        "Dark-mode screenshots in the media galleries"
       ]
     }
   }
