@@ -1,3 +1,338 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+/* Class-based dark mode. ThemeService toggles `.dark` on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Design tokens.
+
+   Semantic variables live on :root / .dark so they swap with the theme, and
+   `@theme inline` maps them onto Tailwind utilities (bg-surface, text-muted,
+   border-line, ...) that follow the swap automatically.
+--------------------------------------------------------------------------- */
+:root {
+  --c-bg: oklch(0.985 0.003 265);
+  --c-surface: oklch(1 0 0);
+  --c-surface-2: oklch(0.968 0.005 265);
+  --c-surface-3: oklch(0.94 0.008 265);
+  --c-line: oklch(0.91 0.008 265);
+  --c-line-strong: oklch(0.84 0.012 265);
+
+  --c-text: oklch(0.21 0.021 265);
+  --c-text-muted: oklch(0.52 0.016 265);
+  --c-text-subtle: oklch(0.64 0.013 265);
+
+  --c-brand: oklch(0.53 0.201 276);
+  --c-brand-hover: oklch(0.47 0.203 276);
+  --c-brand-soft: oklch(0.95 0.028 276);
+  --c-brand-fg: oklch(0.99 0 0);
+
+  /* Project status palette */
+  --c-live: oklch(0.55 0.15 155);
+  --c-live-soft: oklch(0.95 0.04 155);
+  --c-beta: oklch(0.56 0.15 235);
+  --c-beta-soft: oklch(0.95 0.04 235);
+  --c-wip: oklch(0.62 0.15 75);
+  --c-wip-soft: oklch(0.95 0.05 85);
+  --c-paused: oklch(0.58 0.03 265);
+  --c-paused-soft: oklch(0.95 0.008 265);
+  --c-archived: oklch(0.55 0.02 265);
+  --c-archived-soft: oklch(0.94 0.005 265);
+  --c-experiment: oklch(0.58 0.19 320);
+  --c-experiment-soft: oklch(0.95 0.04 320);
+
+  --c-danger: oklch(0.55 0.19 27);
+  --c-danger-soft: oklch(0.95 0.04 27);
+
+  --shadow-card: 0 1px 2px oklch(0.21 0.02 265 / 0.06), 0 4px 12px oklch(0.21 0.02 265 / 0.05);
+  --shadow-lift: 0 2px 4px oklch(0.21 0.02 265 / 0.07), 0 12px 28px oklch(0.21 0.02 265 / 0.1);
+}
+
+.dark {
+  --c-bg: oklch(0.165 0.014 265);
+  --c-surface: oklch(0.208 0.017 265);
+  --c-surface-2: oklch(0.246 0.019 265);
+  --c-surface-3: oklch(0.29 0.021 265);
+  --c-line: oklch(0.31 0.02 265);
+  --c-line-strong: oklch(0.4 0.022 265);
+
+  --c-text: oklch(0.965 0.004 265);
+  --c-text-muted: oklch(0.72 0.016 265);
+  --c-text-subtle: oklch(0.6 0.016 265);
+
+  --c-brand: oklch(0.72 0.163 276);
+  --c-brand-hover: oklch(0.79 0.15 276);
+  --c-brand-soft: oklch(0.3 0.07 276);
+  --c-brand-fg: oklch(0.16 0.02 265);
+
+  --c-live: oklch(0.75 0.15 155);
+  --c-live-soft: oklch(0.3 0.055 155);
+  --c-beta: oklch(0.74 0.13 235);
+  --c-beta-soft: oklch(0.3 0.05 235);
+  --c-wip: oklch(0.8 0.14 85);
+  --c-wip-soft: oklch(0.32 0.05 75);
+  --c-paused: oklch(0.72 0.02 265);
+  --c-paused-soft: oklch(0.29 0.014 265);
+  --c-archived: oklch(0.66 0.015 265);
+  --c-archived-soft: oklch(0.27 0.012 265);
+  --c-experiment: oklch(0.76 0.15 320);
+  --c-experiment-soft: oklch(0.31 0.06 320);
+
+  --c-danger: oklch(0.71 0.16 27);
+  --c-danger-soft: oklch(0.31 0.07 27);
+
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 4px 12px oklch(0 0 0 / 0.3);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 0.45), 0 12px 28px oklch(0 0 0 / 0.4);
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-surface-3: var(--c-surface-3);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+
+  --color-content: var(--c-text);
+  --color-muted: var(--c-text-muted);
+  --color-subtle: var(--c-text-subtle);
+
+  --color-brand: var(--c-brand);
+  --color-brand-hover: var(--c-brand-hover);
+  --color-brand-soft: var(--c-brand-soft);
+  --color-brand-fg: var(--c-brand-fg);
+
+  --color-live: var(--c-live);
+  --color-live-soft: var(--c-live-soft);
+  --color-beta: var(--c-beta);
+  --color-beta-soft: var(--c-beta-soft);
+  --color-wip: var(--c-wip);
+  --color-wip-soft: var(--c-wip-soft);
+  --color-paused: var(--c-paused);
+  --color-paused-soft: var(--c-paused-soft);
+  --color-archived: var(--c-archived);
+  --color-archived-soft: var(--c-archived-soft);
+  --color-experiment: var(--c-experiment);
+  --color-experiment-soft: var(--c-experiment-soft);
+
+  --color-danger: var(--c-danger);
+  --color-danger-soft: var(--c-danger-soft);
+
+  --font-sans:
+    'Inter var', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:
+    ui-monospace, 'JetBrains Mono', 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* A single visible, consistent focus ring across the app. */
+  :focus-visible {
+    outline: 2px solid var(--c-brand);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  ::selection {
+    background-color: var(--c-brand);
+    color: var(--c-brand-fg);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--c-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--c-line-strong);
+    border-radius: 999px;
+    border: 2px solid var(--c-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--c-text-subtle);
+  }
+}
+
+@layer utilities {
+  /* Skip-link: off-screen until focused. */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+  }
+  .skip-link:focus {
+    left: 0.5rem;
+    top: 0.5rem;
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--c-surface-2) 25%,
+      var(--c-surface-3) 37%,
+      var(--c-surface-2) 63%
+    );
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   README HTML injected from the GitHub API. Angular sanitises it on binding;
+   these rules just make it match the rest of the page.
+--------------------------------------------------------------------------- */
+.readme {
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--c-text);
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 1.75em 0 0.6em;
+  }
+  h1 {
+    font-size: 1.375rem;
+  }
+  h2 {
+    font-size: 1.125rem;
+  }
+  h3 {
+    font-size: 1rem;
+  }
+  h1:first-child,
+  h2:first-child,
+  h3:first-child {
+    margin-top: 0;
+  }
+
+  p,
+  ul,
+  ol,
+  blockquote,
+  table {
+    margin: 0.85em 0;
+  }
+  ul,
+  ol {
+    padding-left: 1.4em;
+  }
+  ul {
+    list-style: disc;
+  }
+  ol {
+    list-style: decimal;
+  }
+  li {
+    margin: 0.3em 0;
+  }
+
+  a {
+    color: var(--c-brand);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  code {
+    background: var(--c-surface-2);
+    border: 1px solid var(--c-line);
+    border-radius: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    padding: 0.1em 0.35em;
+  }
+  pre {
+    background: var(--c-surface-2);
+    border: 1px solid var(--c-line);
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    padding: 0.9rem 1rem;
+    margin: 1em 0;
+  }
+  pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: 0.8rem;
+  }
+
+  blockquote {
+    border-left: 3px solid var(--c-line-strong);
+    color: var(--c-text-subtle);
+    padding-left: 1rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.375rem;
+  }
+
+  table {
+    border-collapse: collapse;
+    display: block;
+    overflow-x: auto;
+    width: max-content;
+    max-width: 100%;
+  }
+  th,
+  td {
+    border: 1px solid var(--c-line);
+    padding: 0.45rem 0.7rem;
+    text-align: left;
+  }
+  th {
+    background: var(--c-surface-2);
+    color: var(--c-text);
+    font-weight: 600;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--c-line);
+    margin: 1.75em 0;
+  }
+
+  /* GitHub ships anchor icons that make no sense out of context. */
+  .anchor,
+  .octicon-link {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

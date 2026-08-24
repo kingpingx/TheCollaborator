@@ -1,0 +1,78 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Refresh the GitHub snapshot daily so stars, issues and new repos stay
+  # current even when nothing has been pushed.
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate the GitHub snapshot
+        # GITHUB_TOKEN lifts the API budget from 60 to 5000 requests/hour.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run sync:github
+
+      - name: Resolve the base href
+        id: base
+        run: |
+          repo="${{ github.event.repository.name }}"
+          owner="${{ github.repository_owner }}"
+          # A <owner>.github.io repo (or a custom domain via CNAME) is served
+          # from the domain root; every other repo is served from /<repo>/.
+          if [ "$repo" = "$owner.github.io" ] || [ -f public/CNAME ]; then
+            echo "href=/" >> "$GITHUB_OUTPUT"
+          else
+            echo "href=/$repo/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build
+        run: npm run build -- --base-href "${{ steps.base.outputs.href }}"
+
+      - name: Prepare the Pages artifact
+        run: |
+          out=dist/collaborator/browser
+          # GitHub Pages has no SPA rewrite, so serve index.html for unknown
+          # paths — this is what makes /projects/<name> survive a refresh.
+          cp "$out/index.html" "$out/404.html"
+          # Stop Pages running the output through Jekyll.
+          touch "$out/.nojekyll"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/collaborator/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

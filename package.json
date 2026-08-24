@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "sync:github": "node tools/sync-github.mjs",
+    "format": "prettier --write \"src/**/*.{ts,html,css}\" \"tools/**/*.mjs\""
   },
   "private": true,
   "packageManager": "npm@11.17.0",

@@ -1,0 +1,107 @@
+<div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+  <header>
+    <h1 class="text-content text-3xl font-extrabold tracking-tight sm:text-4xl">About</h1>
+    <p class="text-muted mt-3 text-base leading-relaxed">
+      Collaborator is a running index of what {{ ownerName }} is building. It reads directly from
+      GitHub, so it stays current on its own — and adds the context GitHub doesn't store: what state
+      a project is in, whether there's something to try, and where help is wanted.
+    </p>
+  </header>
+
+  <!-- Statuses -->
+  <section class="mt-14">
+    <h2 class="text-content text-xl font-bold tracking-tight">What the statuses mean</h2>
+    <p class="text-muted mt-2 text-sm leading-relaxed">
+      Every project carries one. Where it isn't set by hand, it's inferred from whether the repo is
+      archived, whether it has a live URL, and how recently it was pushed to.
+    </p>
+
+    <dl class="mt-6 space-y-3">
+      @for (status of statuses; track status.id) {
+        <div class="border-line bg-surface flex items-start gap-4 rounded-lg border p-4">
+          <dt class="shrink-0">
+            <span
+              class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium"
+              [class]="status.classes"
+            >
+              <span class="h-1.5 w-1.5 rounded-full" [class]="status.dot"></span>
+              {{ status.label }}
+            </span>
+          </dt>
+          <dd class="text-muted text-sm leading-relaxed">{{ status.description }}</dd>
+        </div>
+      }
+    </dl>
+  </section>
+
+  <!-- Contributing -->
+  <section class="mt-14">
+    <h2 class="text-content text-xl font-bold tracking-tight">How to contribute</h2>
+    <p class="text-muted mt-2 text-sm leading-relaxed">
+      Everything is public and everything is open to pull requests. You don't need permission to
+      start — but a quick comment saying what you're picking up saves duplicated effort.
+    </p>
+
+    <ol class="mt-6 space-y-4">
+      @for (step of steps; track step.title; let i = $index) {
+        <li class="border-line bg-surface flex gap-4 rounded-xl border p-5">
+          <span
+            class="bg-brand-soft text-brand flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+          >
+            <app-icon [name]="step.icon" [size]="17" />
+          </span>
+          <div class="min-w-0">
+            <h3 class="text-content text-sm font-semibold">
+              <span class="text-subtle mr-1.5 font-mono">{{ i + 1 }}.</span>{{ step.title }}
+            </h3>
+            <p class="text-muted mt-1.5 text-sm leading-relaxed">{{ step.body }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a
+        routerLink="/projects"
+        [queryParams]="{ help: '1' }"
+        class="bg-brand text-brand-fg hover:bg-brand-hover inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+      >
+        <app-icon name="users" [size]="15" /> See what needs help
+      </a>
+      @if (profileUrl) {
+        <a
+          [href]="profileUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors"
+        >
+          <app-icon name="github" [size]="15" /> GitHub profile
+        </a>
+      }
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="mt-14">
+    <h2 class="text-content text-xl font-bold tracking-tight">How this site works</h2>
+    <div class="text-muted mt-4 space-y-4 text-sm leading-relaxed">
+      <p>
+        The project list comes from the public GitHub API, so a new repository shows up here without
+        anyone editing this site. Curated details — a longer write-up, a demo URL, screenshots, a
+        note about what needs doing — live in a small JSON file alongside the code and take
+        precedence over whatever GitHub reports.
+      </p>
+      <p>
+        GitHub allows 60 unauthenticated API requests per hour per visitor's IP address, which a
+        public page would exhaust quickly. So a full snapshot is also generated at build time and
+        shipped with the site. If the live call is rate-limited or the network is down, the page
+        renders from that snapshot instead of showing an error, and says so quietly at the bottom of
+        the list.
+      </p>
+      <p>
+        It's an Angular single-page app styled with Tailwind, with no backend and no analytics. The
+        source is on GitHub like everything else here.
+      </p>
+    </div>
+  </section>
+</div>

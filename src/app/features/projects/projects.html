@@ -1,0 +1,189 @@
+<div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+  <header>
+    <h1 class="text-content text-3xl font-extrabold tracking-tight sm:text-4xl">Projects</h1>
+    <p class="text-muted mt-2 max-w-2xl text-sm leading-relaxed sm:text-base">
+      Everything public, with its current state. Filter by status or language, or jump straight to
+      the ones open to contributors.
+    </p>
+  </header>
+
+  @if (!projects.isConfigured()) {
+    <div class="mt-8">
+      <app-setup-notice />
+    </div>
+  }
+
+  <!-- Search + sort -->
+  <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div class="relative flex-1">
+      <span class="text-subtle pointer-events-none absolute top-1/2 left-3 -translate-y-1/2">
+        <app-icon name="search" [size]="16" />
+      </span>
+      <input
+        type="search"
+        [value]="projects.filters().query"
+        (input)="onSearch($any($event.target).value)"
+        placeholder="Search by name, description or tech…"
+        aria-label="Search projects"
+        class="border-line bg-surface text-content placeholder:text-subtle focus:border-brand w-full rounded-lg border py-2.5 pr-3 pl-9 text-sm outline-none transition-colors"
+      />
+    </div>
+
+    <div class="flex items-center gap-2">
+      <label for="sort" class="text-subtle shrink-0 text-xs font-medium">Sort</label>
+      <select
+        id="sort"
+        [value]="projects.filters().sort"
+        (change)="setSort($any($event.target).value)"
+        class="border-line bg-surface text-content focus:border-brand rounded-lg border px-3 py-2.5 text-sm outline-none transition-colors"
+      >
+        @for (option of sortOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+
+      <button
+        type="button"
+        (click)="filtersOpen.set(!filtersOpen())"
+        [attr.aria-expanded]="filtersOpen()"
+        aria-controls="filter-panel"
+        class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors"
+      >
+        <app-icon name="filter" [size]="15" />
+        Filters
+        @if (activeFilterCount() > 0) {
+          <span class="bg-brand text-brand-fg rounded-full px-1.5 text-[11px] font-semibold">
+            {{ activeFilterCount() }}
+          </span>
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter panel -->
+  @if (filtersOpen()) {
+    <div id="filter-panel" class="border-line bg-surface mt-3 rounded-xl border p-5">
+      <fieldset>
+        <legend class="text-subtle text-xs font-semibold tracking-wide uppercase">Status</legend>
+        <div class="mt-3 flex flex-wrap gap-2">
+          @for (status of projects.availableStatuses(); track status) {
+            <button
+              type="button"
+              (click)="toggleStatus(status)"
+              [attr.aria-pressed]="projects.filters().statuses.includes(status)"
+              class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors"
+              [class]="
+                projects.filters().statuses.includes(status)
+                  ? 'border-brand bg-brand-soft text-brand'
+                  : 'border-line text-muted hover:bg-surface-2'
+              "
+            >
+              <span class="h-1.5 w-1.5 rounded-full" [class]="statusMeta[status].dot"></span>
+              {{ statusMeta[status].label }}
+            </button>
+          }
+        </div>
+      </fieldset>
+
+      @if (projects.availableLanguages().length) {
+        <fieldset class="mt-5">
+          <legend class="text-subtle text-xs font-semibold tracking-wide uppercase">
+            Language
+          </legend>
+          <div class="mt-3 flex flex-wrap gap-2">
+            @for (entry of projects.availableLanguages(); track entry[0]) {
+              <button
+                type="button"
+                (click)="toggleLanguage(entry[0])"
+                [attr.aria-pressed]="projects.filters().languages.includes(entry[0])"
+                class="rounded-full border px-3 py-1 text-xs font-medium transition-colors"
+                [class]="
+                  projects.filters().languages.includes(entry[0])
+                    ? 'border-brand bg-brand-soft text-brand'
+                    : 'border-line text-muted hover:bg-surface-2'
+                "
+              >
+                {{ entry[0] }}
+                <span class="text-subtle ml-1">{{ entry[1] }}</span>
+              </button>
+            }
+          </div>
+        </fieldset>
+      }
+
+      <div class="border-line mt-5 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
+        <button
+          type="button"
+          (click)="toggleHelpWanted()"
+          [attr.aria-pressed]="projects.filters().helpWantedOnly"
+          class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors"
+          [class]="
+            projects.filters().helpWantedOnly
+              ? 'border-brand bg-brand-soft text-brand'
+              : 'border-line text-muted hover:bg-surface-2'
+          "
+        >
+          <app-icon name="users" [size]="14" />
+          Open to contributors only
+        </button>
+
+        @if (hasActiveFilters()) {
+          <button
+            type="button"
+            (click)="clearAll()"
+            class="text-muted hover:text-content text-xs font-medium underline underline-offset-2"
+          >
+            Clear all filters
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Results -->
+  <div class="mt-6 flex items-center justify-between gap-4">
+    <p class="text-subtle text-xs" aria-live="polite">
+      @if (projects.loaded()) {
+        {{ results().length }} {{ results().length === 1 ? 'project' : 'projects' }}
+        @if (hasActiveFilters()) {
+          <span> of {{ projects.projects().length }}</span>
+        }
+      }
+    </p>
+    <app-data-source-note />
+  </div>
+
+  <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    @if (projects.loading() && !projects.loaded()) {
+      @for (i of skeletons; track i) {
+        <app-skeleton-card />
+      }
+    } @else {
+      @for (project of results(); track project.name) {
+        <app-project-card [project]="project" />
+      } @empty {
+        <div class="sm:col-span-2 lg:col-span-3">
+          <app-empty-state
+            [title]="hasActiveFilters() ? 'No projects match those filters' : 'Nothing to show yet'"
+            [message]="
+              hasActiveFilters()
+                ? 'Try widening the search, or clear the filters to see everything.'
+                : 'No public repositories came back for this account.'
+            "
+            [icon]="hasActiveFilters() ? 'search' : 'inbox'"
+          >
+            @if (hasActiveFilters()) {
+              <button
+                type="button"
+                (click)="clearAll()"
+                class="bg-brand text-brand-fg hover:bg-brand-hover rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+              >
+                Clear filters
+              </button>
+            }
+          </app-empty-state>
+        </div>
+      }
+    }
+  </div>
+</div>

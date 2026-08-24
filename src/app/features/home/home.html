@@ -1,0 +1,171 @@
+<!-- Hero -->
+<section class="relative overflow-hidden">
+  <div
+    class="from-brand-soft/60 pointer-events-none absolute inset-0 bg-gradient-to-b to-transparent"
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative mx-auto max-w-6xl px-4 pt-16 pb-12 sm:px-6 sm:pt-24 sm:pb-16">
+    <p
+      class="border-line bg-surface text-muted inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium"
+    >
+      <span class="bg-live h-1.5 w-1.5 rounded-full"></span>
+      Open to contributors
+    </p>
+
+    <h1
+      class="text-content mt-5 max-w-3xl text-4xl leading-[1.1] font-extrabold tracking-tight sm:text-5xl"
+    >
+      The projects
+      <span class="text-brand">{{ ownerName }}</span>
+      is building — and how to build them together.
+    </h1>
+
+    <p class="text-muted mt-5 max-w-2xl text-base leading-relaxed sm:text-lg">
+      Not a repo dump. Each project here says what it actually does, what state it's in, and where
+      an extra pair of hands would help. Several have live demos you can try right on the page.
+    </p>
+
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      <a
+        routerLink="/projects"
+        class="bg-brand text-brand-fg hover:bg-brand-hover inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors"
+      >
+        Browse all projects
+        <app-icon name="arrowRight" [size]="15" />
+      </a>
+      <a
+        routerLink="/about"
+        class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition-colors"
+      >
+        How to contribute
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="mx-auto max-w-6xl px-4 sm:px-6">
+  @if (!projects.isConfigured()) {
+    <app-setup-notice />
+  }
+
+  <!-- Stat strip -->
+  @if (projects.loaded() && stats().total > 0) {
+    <section class="border-line bg-surface grid grid-cols-2 gap-px overflow-hidden rounded-xl border sm:grid-cols-4">
+      <div class="bg-surface p-5">
+        <p class="text-content text-2xl font-bold">{{ stats().total }}</p>
+        <p class="text-subtle mt-0.5 text-xs font-medium">Projects</p>
+      </div>
+      <div class="bg-surface border-line p-5 sm:border-l">
+        <p class="text-live text-2xl font-bold">{{ stats().live }}</p>
+        <p class="text-subtle mt-0.5 text-xs font-medium">Live or in beta</p>
+      </div>
+      <div class="bg-surface border-line border-t p-5 sm:border-t-0 sm:border-l">
+        <p class="text-brand text-2xl font-bold">{{ stats().helpWanted }}</p>
+        <p class="text-subtle mt-0.5 text-xs font-medium">Want contributors</p>
+      </div>
+      <div class="bg-surface border-line border-t p-5 sm:border-t-0 sm:border-l">
+        <p class="text-content text-2xl font-bold">{{ stats().languages }}</p>
+        <p class="text-subtle mt-0.5 text-xs font-medium">Languages used</p>
+      </div>
+    </section>
+  }
+
+  <!-- Highlights -->
+  <section class="mt-14">
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h2 class="text-content text-xl font-bold tracking-tight">
+          {{ isCurated() ? 'Featured work' : 'Recently active' }}
+        </h2>
+        <p class="text-muted mt-1 text-sm">
+          {{
+            isCurated()
+              ? 'The ones worth looking at first.'
+              : 'The projects that have moved most recently.'
+          }}
+        </p>
+      </div>
+      <a
+        routerLink="/projects"
+        class="text-brand hover:text-brand-hover inline-flex items-center gap-1.5 text-sm font-semibold"
+      >
+        See all <app-icon name="arrowRight" [size]="14" />
+      </a>
+    </div>
+
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      @if (projects.loading() && !projects.loaded()) {
+        @for (i of skeletons; track i) {
+          <app-skeleton-card />
+        }
+      } @else {
+        @for (project of highlights(); track project.name) {
+          <app-project-card [project]="project" />
+        } @empty {
+          <div class="sm:col-span-2 lg:col-span-3">
+            <app-empty-state
+              title="Nothing to show yet"
+              [message]="
+                projects.isConfigured()
+                  ? 'No public repositories came back for this account.'
+                  : 'Set your GitHub username in the config and this fills itself in.'
+              "
+            />
+          </div>
+        }
+      }
+    </div>
+
+    @if (projects.loaded()) {
+      <div class="mt-5">
+        <app-data-source-note />
+      </div>
+    }
+  </section>
+
+  <!-- Help wanted -->
+  @if (helpWanted().length) {
+    <section class="border-line bg-surface mt-16 rounded-xl border p-6 sm:p-8">
+      <div class="flex items-start gap-3">
+        <span class="bg-brand-soft text-brand flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
+          <app-icon name="users" [size]="18" />
+        </span>
+        <div class="min-w-0">
+          <h2 class="text-content text-lg font-bold tracking-tight">Looking for a hand</h2>
+          <p class="text-muted mt-1 text-sm leading-relaxed">
+            These have open issues tagged for newcomers, or a specific gap that needs filling. No
+            prior context required — each project page lists exactly what's needed.
+          </p>
+        </div>
+      </div>
+
+      <ul class="mt-6 space-y-3">
+        @for (project of helpWanted(); track project.name) {
+          <li>
+            <a
+              [routerLink]="['/projects', project.name]"
+              class="border-line hover:border-brand/40 hover:bg-surface-2 flex items-center gap-4 rounded-lg border p-4 transition-colors"
+            >
+              <div class="min-w-0 flex-1">
+                <p class="text-content truncate text-sm font-semibold">{{ project.displayName }}</p>
+                <p class="text-muted mt-0.5 truncate text-xs">
+                  {{ project.helpNotes || project.tagline }}
+                </p>
+              </div>
+              @if (project.goodFirstIssues.length) {
+                <span
+                  class="bg-brand-soft text-brand shrink-0 rounded-full px-2.5 py-1 text-xs font-medium"
+                >
+                  {{ project.goodFirstIssues.length }} good first
+                  {{ project.goodFirstIssues.length === 1 ? 'issue' : 'issues' }}
+                </span>
+              }
+              <app-icon name="arrowRight" [size]="15" />
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</div>

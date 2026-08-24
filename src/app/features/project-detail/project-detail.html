@@ -1,0 +1,305 @@
+@if (project(); as p) {
+  <article class="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+    <a
+      routerLink="/projects"
+      class="text-muted hover:text-content inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
+    >
+      <app-icon name="arrowLeft" [size]="15" /> All projects
+    </a>
+
+    <!-- Title block -->
+    <header class="mt-6">
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="text-content text-3xl font-extrabold tracking-tight sm:text-4xl">
+          {{ p.displayName }}
+        </h1>
+        <app-status-badge [status]="p.status" size="md" />
+      </div>
+
+      <p class="text-muted mt-3 max-w-3xl text-base leading-relaxed">{{ p.tagline }}</p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        @if (p.demoUrl) {
+          <a
+            [href]="p.demoUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-brand text-brand-fg hover:bg-brand-hover inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+          >
+            <app-icon name="play" [size]="14" /> Live demo
+          </a>
+        }
+        <a
+          [href]="p.repoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors"
+        >
+          <app-icon name="github" [size]="15" /> View source
+        </a>
+
+        <div class="text-subtle ml-auto flex items-center gap-4 text-xs">
+          <span class="inline-flex items-center gap-1.5">
+            <app-icon name="star" [size]="14" /> {{ p.stars }}
+          </span>
+          <span class="inline-flex items-center gap-1.5">
+            <app-icon name="fork" [size]="14" /> {{ p.forks }}
+          </span>
+          <span class="inline-flex items-center gap-1.5">
+            <app-icon name="clock" [size]="14" /> Updated {{ relative(p.pushedAt) }}
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Demo -->
+    <div class="mt-10">
+      <app-demo-frame [project]="p" />
+    </div>
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <!-- Main column -->
+      <div class="min-w-0 space-y-12">
+        @if (description()) {
+          <section>
+            <h2 class="text-content text-lg font-bold tracking-tight">About this project</h2>
+            <div
+              class="text-muted mt-4 space-y-4 text-sm leading-relaxed [&_h3]:mt-6 [&_h3]:text-base [&_h4]:mt-5 [&_h4]:text-sm"
+              [innerHTML]="description()"
+            ></div>
+          </section>
+        }
+
+        @if (p.roadmap.length) {
+          <section>
+            <h2 class="text-content text-lg font-bold tracking-tight">What's next</h2>
+            <ul class="mt-4 space-y-2.5">
+              @for (item of p.roadmap; track item) {
+                <li class="text-muted flex items-start gap-3 text-sm leading-relaxed">
+                  <span class="bg-brand/40 mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"></span>
+                  {{ item }}
+                </li>
+              }
+            </ul>
+          </section>
+        }
+
+        <!-- Contribute -->
+        <section class="border-line bg-surface rounded-xl border p-6">
+          <div class="flex items-start gap-3">
+            <span
+              class="bg-brand-soft text-brand flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+            >
+              <app-icon name="users" [size]="18" />
+            </span>
+            <div class="min-w-0">
+              <h2 class="text-content text-lg font-bold tracking-tight">Want to contribute?</h2>
+              <p class="text-muted mt-1 text-sm leading-relaxed">
+                @if (p.helpNotes) {
+                  {{ p.helpNotes }}
+                } @else {
+                  Issues, fixes and ideas are all welcome — pick something below, or open an issue
+                  describing what you'd like to change.
+                }
+              </p>
+            </div>
+          </div>
+
+          @if (goodFirstIssues().length) {
+            <div class="mt-6">
+              <h3 class="text-subtle text-xs font-semibold tracking-wide uppercase">
+                Good first issues
+              </h3>
+              <ul class="mt-3 space-y-2">
+                @for (issue of goodFirstIssues(); track issue.id) {
+                  <li>
+                    <a
+                      [href]="issue.html_url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="border-line hover:border-brand/40 hover:bg-surface-2 flex items-start gap-3 rounded-lg border p-3 transition-colors"
+                    >
+                      <span class="text-live mt-0.5 shrink-0">
+                        <app-icon name="issue" [size]="15" />
+                      </span>
+                      <span class="min-w-0 flex-1">
+                        <span class="text-content block text-sm font-medium">{{ issue.title }}</span>
+                        <span class="text-subtle mt-0.5 block text-xs">
+                          #{{ issue.number }} · opened {{ relative(issue.created_at) }}
+                        </span>
+                      </span>
+                      <app-icon name="external" [size]="13" />
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+
+          @if (contributeLinks(); as links) {
+            <div class="border-line mt-6 flex flex-wrap gap-2 border-t pt-5">
+              <a
+                [href]="links.fork"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors"
+              >
+                <app-icon name="fork" [size]="13" /> Fork
+              </a>
+              <a
+                [href]="links.newIssue"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors"
+              >
+                <app-icon name="issue" [size]="13" /> Open an issue
+              </a>
+              <a
+                [href]="links.issues"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors"
+              >
+                All issues
+                @if (p.openIssues) {
+                  <span class="text-subtle">{{ p.openIssues }}</span>
+                }
+              </a>
+              @if (p.hasContributing) {
+                <a
+                  [href]="links.contributing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors"
+                >
+                  <app-icon name="book" [size]="13" /> Contributing guide
+                </a>
+              }
+              <a
+                [href]="links.star"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="border-line text-content hover:bg-surface-2 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors"
+              >
+                <app-icon name="star" [size]="13" /> Star the repo
+              </a>
+            </div>
+          }
+        </section>
+
+        @if (p.readmeHtml) {
+          <section>
+            <h2 class="text-content text-lg font-bold tracking-tight">From the README</h2>
+            <div
+              class="border-line bg-surface readme text-muted mt-4 overflow-x-auto rounded-xl border p-6 text-sm leading-relaxed"
+              [innerHTML]="p.readmeHtml"
+            ></div>
+          </section>
+        }
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="space-y-6 lg:sticky lg:top-24 lg:self-start">
+        @if (p.techStack.length) {
+          <section class="border-line bg-surface rounded-xl border p-5">
+            <h2 class="text-subtle text-xs font-semibold tracking-wide uppercase">Built with</h2>
+            <div class="mt-3 flex flex-wrap gap-1.5">
+              @for (tech of p.techStack; track tech) {
+                <app-tech-chip [label]="tech" />
+              }
+            </div>
+          </section>
+        }
+
+        @if (languageBars().length) {
+          <section class="border-line bg-surface rounded-xl border p-5">
+            <h2 class="text-subtle text-xs font-semibold tracking-wide uppercase">Languages</h2>
+            <div class="mt-4 space-y-2.5">
+              @for (lang of languageBars(); track lang.name) {
+                <div>
+                  <div class="text-muted flex justify-between text-xs">
+                    <span>{{ lang.name }}</span>
+                    <span class="text-subtle">{{ lang.percent }}%</span>
+                  </div>
+                  <div class="bg-surface-2 mt-1 h-1.5 overflow-hidden rounded-full">
+                    <div class="bg-brand h-full rounded-full" [style.width.%]="lang.percent"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        <section class="border-line bg-surface rounded-xl border p-5">
+          <h2 class="text-subtle text-xs font-semibold tracking-wide uppercase">Details</h2>
+          <dl class="mt-3 space-y-3 text-sm">
+            <div class="flex justify-between gap-3">
+              <dt class="text-subtle">Repository</dt>
+              <dd class="text-content truncate font-mono text-xs">{{ p.name }}</dd>
+            </div>
+            <div class="flex justify-between gap-3">
+              <dt class="text-subtle">Created</dt>
+              <dd class="text-content text-xs">{{ formatDate(p.createdAt) }}</dd>
+            </div>
+            <div class="flex justify-between gap-3">
+              <dt class="text-subtle">Last push</dt>
+              <dd class="text-content text-xs">{{ formatDate(p.pushedAt) }}</dd>
+            </div>
+            @if (p.license) {
+              <div class="flex justify-between gap-3">
+                <dt class="text-subtle">License</dt>
+                <dd class="text-content inline-flex items-center gap-1.5 text-xs">
+                  <app-icon name="license" [size]="13" /> {{ p.license }}
+                </dd>
+              </div>
+            }
+            @if (p.primaryLanguage) {
+              <div class="flex justify-between gap-3">
+                <dt class="text-subtle">Primary language</dt>
+                <dd class="text-content text-xs">{{ p.primaryLanguage }}</dd>
+              </div>
+            }
+          </dl>
+
+          @if (p.topics.length) {
+            <div class="border-line mt-4 border-t pt-4">
+              <h3 class="text-subtle text-xs font-semibold tracking-wide uppercase">Topics</h3>
+              <div class="mt-2 flex flex-wrap gap-1.5">
+                @for (topic of p.topics; track topic) {
+                  <span class="bg-surface-2 text-muted rounded-full px-2 py-0.5 text-[11px]">
+                    {{ topic }}
+                  </span>
+                }
+              </div>
+            </div>
+          }
+        </section>
+      </aside>
+    </div>
+  </article>
+} @else if (notFound()) {
+  <div class="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+    <app-empty-state
+      title="No such project"
+      message="There's nothing here under that name. It may have been renamed, made private, or hidden from this showcase."
+      icon="search"
+    >
+      <a
+        routerLink="/projects"
+        class="bg-brand text-brand-fg hover:bg-brand-hover rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+      >
+        Browse all projects
+      </a>
+    </app-empty-state>
+  </div>
+} @else {
+  <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+    <div class="shimmer h-9 w-64 rounded"></div>
+    <div class="shimmer mt-4 h-4 w-full max-w-xl rounded"></div>
+    <div class="shimmer mt-10 h-96 w-full rounded-xl"></div>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+      <app-skeleton-card />
+      <app-skeleton-card />
+    </div>
+  </div>
+}

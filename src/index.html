@@ -5,7 +5,46 @@
     <title>Collaborator</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A showcase of open-source projects — what they are, what state they're in, live demos, and how to contribute."
+    />
+    <meta name="theme-color" content="#6d5cf5" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Collaborator" />
+    <meta
+      property="og:description"
+      content="A showcase of open-source projects — what they are, what state they're in, live demos, and how to contribute."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      Applies the stored theme before first paint so there is no light-mode
+      flash on load. Kept inline and dependency-free on purpose; ThemeService
+      takes over once Angular boots and uses the same storage key.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('collaborator.theme');
+          var dark = stored
+            ? stored === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* private mode / storage blocked — fall back to light */
+        }
+      })();
+    </script>
   </head>
   <body>
     <app-root></app-root>

@@ -1,0 +1,45 @@
+{
+  "_help": {
+    "what": "Curated details that GitHub cannot store. Everything here is optional — a repo with no entry still renders from its API data alone.",
+    "keys": {
+      "featured": "Repo names pinned to the home page, in this order.",
+      "hidden": "Repo names never shown anywhere on the site.",
+      "overrides": "Per-repo curation, keyed by the exact repository name."
+    },
+    "overrideFields": {
+      "displayName": "Replaces the auto-humanised repo name.",
+      "tagline": "One line shown on the card. Falls back to the GitHub description.",
+      "longDescription": "Shown on the detail page. Supports **bold**, *italic*, `code`, [links](https://example.com), - bullet lists and # headings.",
+      "status": "One of: live, beta, wip, paused, archived, experiment. Otherwise inferred.",
+      "demoUrl": "Live demo URL. Falls back to the repo's GitHub homepage field.",
+      "embeddable": "true to render the demo in an iframe on the page. Leave false if the site sends X-Frame-Options or frame-ancestors, or it will show a blank box.",
+      "media": "Screenshots/GIFs shown when the demo cannot be embedded. Paths are relative to public/, e.g. 'media/app-1.png'.",
+      "techStack": "Overrides the stack derived from languages and topics.",
+      "lookingForHelp": "Flags the project as open to contributors.",
+      "helpNotes": "One or two sentences on what specifically needs doing.",
+      "roadmap": "Bullet list rendered as 'What's next'.",
+      "hideReadme": "true to omit the README section on the detail page."
+    },
+    "alsoNote": "A repository can set its own status with a GitHub topic like 'status-live' or 'status-wip', which is handy for repos you do not want to list here."
+  },
+
+  "featured": [],
+
+  "hidden": [],
+
+  "overrides": {
+    "example-repo": {
+      "displayName": "Example Project",
+      "tagline": "Delete this entry — it is here to show the shape of an override.",
+      "longDescription": "A longer write-up shown on the detail page.\n\nIt supports a few Markdown basics: **bold**, `inline code` and [links](https://example.com).\n\n- bullet points\n- work too",
+      "status": "wip",
+      "demoUrl": "https://example.com",
+      "embeddable": false,
+      "media": [{ "type": "image", "src": "media/example-1.png", "caption": "The main screen" }],
+      "techStack": ["Angular", "TypeScript", "Tailwind"],
+      "lookingForHelp": true,
+      "helpNotes": "Needs test coverage and a proper error state on the settings page.",
+      "roadmap": ["Offline support", "Keyboard shortcuts", "Export to CSV"]
+    }
+  }
+}
