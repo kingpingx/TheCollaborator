@@ -25,14 +25,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Creates the Pages site if it does not exist yet. Without this,
-      # deploy-pages fails with a bare 404 ("Failed to create deployment")
-      # until someone sets Settings -> Pages -> Source to GitHub Actions by
-      # hand. `enablement` does that through the API instead.
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+      # NOTE: Pages must be enabled once, by hand, before this workflow can
+      # publish: Settings -> Pages -> Build and deployment -> Source ->
+      # GitHub Actions. Automating it with configure-pages(enablement: true)
+      # does not work here — creating a Pages site needs admin rights that
+      # GITHUB_TOKEN is not granted, so it fails with "Resource not
+      # accessible by integration". Until it is enabled, the build below
+      # succeeds and only the deploy job 404s.
 
       - uses: actions/setup-node@v4
         with:
