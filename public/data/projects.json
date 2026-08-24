@@ -60,7 +60,7 @@
     "TheColloborator": {
       "displayName": "The Colloborator",
       "tagline": "This site — a self-updating showcase of my GitHub projects.",
-      "status": "wip",
+      "status": "live",
       "embeddable": true,
       "techStack": [
         "Angular",
