@@ -31,8 +31,7 @@ export interface AppConfig {
 export const APP_CONFIG = new InjectionToken<AppConfig>('APP_CONFIG');
 
 export const appConfigValue: AppConfig = {
-  // TODO: set this to your GitHub handle — it is the only required value.
-  githubUsername: '',
+  githubUsername: 'kingpingx',
 
   apiBase: 'https://api.github.com',
   cacheTtlMinutes: 30,

@@ -310,14 +310,19 @@ export class ProjectService {
     return null;
   }
 
-  /** Best guess when nothing is curated — recency and a live URL are the signals. */
+  /**
+   * Best guess when nothing is curated — recency and a live URL are the signals.
+   *
+   * "Archived" is only ever claimed when GitHub actually says so: an old repo
+   * is not an abandoned one, and mislabelling it reads as a statement about
+   * the project that its owner never made. Everything quiet falls back to
+   * "paused", which is the honest reading of "no recent pushes".
+   */
   private deriveStatus(repo: GithubRepo, demoUrl: string | null): ProjectStatus {
     if (repo.archived) return 'archived';
-    const ageDays = (Date.now() - new Date(repo.pushed_at).getTime()) / DAY_MS;
     if (demoUrl) return 'live';
-    if (ageDays <= 45) return 'wip';
-    if (ageDays <= 365) return 'paused';
-    return 'archived';
+    const ageDays = (Date.now() - new Date(repo.pushed_at).getTime()) / DAY_MS;
+    return ageDays <= 45 ? 'wip' : 'paused';
   }
 
   private deriveTechStack(
@@ -341,6 +346,10 @@ export class ProjectService {
 
   /** `my-cool-app` / `my_cool_app` -> `My Cool App`. */
   private humanize(name: string): string {
+    // Domain-style names (kingpingx.github.io) are already the display name —
+    // splitting them on dots and title-casing produces nonsense.
+    if (/^[\w-]+(\.[\w-]+){1,}$/.test(name)) return name;
+
     return name
       .replace(/[-_]+/g, ' ')
       .replace(/([a-z])([A-Z])/g, '$1 $2')

@@ -25,7 +25,7 @@
 
   "featured": [],
 
-  "hidden": [],
+  "hidden": ["kingpingx"],
 
   "overrides": {
     "example-repo": {

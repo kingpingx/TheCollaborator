@@ -105,6 +105,11 @@ describe('ProjectService', () => {
     expect(service.projects()[0].displayName).toBe('My Cool App');
   });
 
+  it('leaves domain-style repo names alone', async () => {
+    await loadWith({}, snapshot([repo({ name: 'kingpingx.github.io' })]));
+    expect(service.projects()[0].displayName).toBe('kingpingx.github.io');
+  });
+
   it('lets overrides win over the API data', async () => {
     await loadWith(
       {
@@ -162,6 +167,12 @@ describe('ProjectService', () => {
     it('marks a long-untouched repo as paused', async () => {
       const sixMonthsAgo = new Date(Date.now() - 180 * 86_400_000).toISOString();
       await loadWith({}, snapshot([repo({ pushed_at: sixMonthsAgo })]));
+      expect(service.projects()[0].status).toBe('paused');
+    });
+
+    it('never infers "archived" from age alone — only GitHub can say that', async () => {
+      const fiveYearsAgo = new Date(Date.now() - 5 * 365 * 86_400_000).toISOString();
+      await loadWith({}, snapshot([repo({ pushed_at: fiveYearsAgo, archived: false })]));
       expect(service.projects()[0].status).toBe('paused');
     });
 

@@ -1,14 +1,38 @@
 # Collaborator
 
-A self-updating showcase for GitHub projects — what each one is, what state it's
-in, a demo you can try, and a clear on-ramp for anyone who wants to contribute.
+**Collaborator is a website that showcases my GitHub projects.**
 
-The project list is read live from the GitHub API, so a new repository appears
-without editing this site. A small curated file adds the context GitHub does not
-store: status, demo URL, screenshots, and what specifically needs doing.
+A GitHub profile is a list of repository names. It doesn't tell you which
+projects are finished and which are half-built, which ones you can actually
+try right now, or which ones would welcome your help. Collaborator is the
+page that answers those questions.
+
+For every project it shows:
+
+- **What it is** — a real description, not just the repo name.
+- **What state it's in** — Live, Beta, In progress, Paused, Archived or
+  Experiment, so nobody wastes time on something abandoned.
+- **A working demo** — playable in an embedded frame right on the page where
+  the project can be embedded, or as screenshots and a direct link where it
+  can't.
+- **How to contribute** — open "good first issues" pulled live from GitHub,
+  plus fork, open-an-issue and contributing-guide links, and a plain-English
+  note about what specifically needs doing.
+
+### It keeps itself up to date
+
+The project list is read straight from the GitHub API, so pushing a new
+repository is enough to make it appear here — there's no list to maintain by
+hand. A small curated file adds the things GitHub can't store (status, demo
+URL, screenshots, what needs help), and those always win over the API.
+
+That's the whole idea: **the boring parts stay automatic, and you only hand-write
+the parts that make a project look worth someone's time.**
+
+---
 
 Built with Angular 22 (standalone, signals, zoneless) and Tailwind CSS v4.
-No backend, no analytics.
+No backend, no database, no analytics — it deploys as static files.
 
 ## Getting started
 
@@ -87,9 +111,10 @@ was pushed to.
 
 `embeddable: true` renders the demo in an iframe on the project page. Leave it
 off if the site sends `X-Frame-Options` or a `frame-ancestors` CSP — a
-cross-origin refusal is invisible to JavaScript, so this cannot be detected
-automatically and you would get a blank box. Projects that can't be embedded
-fall back to the screenshot gallery, then to a plain "open in new tab" button.
+cross-origin framing refusal is invisible to JavaScript, so this cannot be
+detected automatically and you would get a blank box. Projects that can't be
+embedded fall back to the screenshot gallery, then to a plain "open in new tab"
+button.
 
 ## Why a snapshot
 
