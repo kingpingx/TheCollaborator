@@ -1,10 +1,10 @@
-# Collaborator
+# The Colloborator
 
-**Collaborator is a website that showcases my GitHub projects.**
+**The Colloborator is a website that showcases my GitHub projects.**
 
 A GitHub profile is a list of repository names. It doesn't tell you which
 projects are finished and which are half-built, which ones you can actually
-try right now, or which ones would welcome your help. Collaborator is the
+try right now, or which ones would welcome your help. The Colloborator is the
 page that answers those questions.
 
 For every project it shows:

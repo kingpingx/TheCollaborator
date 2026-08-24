@@ -277,7 +277,7 @@ export class FeatureIdeas {
       this.email().trim(),
       '',
       '---',
-      `Suggested via the Collaborator showcase for **${this.project().displayName}**.`,
+      `Suggested via The Colloborator showcase for **${this.project().displayName}**.`,
     ].join('\n');
 
     const params = new URLSearchParams({

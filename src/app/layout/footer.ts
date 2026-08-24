@@ -18,7 +18,7 @@ import { Icon } from '../shared/ui/icon';
             <span class="bg-brand text-brand-fg flex h-6 w-6 items-center justify-center rounded-md">
               <app-icon name="sparkles" [size]="13" />
             </span>
-            Collaborator
+            The Colloborator
           </p>
           <p class="text-subtle mt-2 max-w-sm text-xs leading-relaxed">
             An open showcase of {{ ownerName }}'s projects — what they are, where they stand, and
