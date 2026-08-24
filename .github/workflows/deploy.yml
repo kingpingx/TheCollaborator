@@ -25,6 +25,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Creates the Pages site if it does not exist yet. Without this,
+      # deploy-pages fails with a bare 404 ("Failed to create deployment")
+      # until someone sets Settings -> Pages -> Source to GitHub Actions by
+      # hand. `enablement` does that through the API instead.
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24
