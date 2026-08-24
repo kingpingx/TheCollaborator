@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
-const SITE = 'The Colloborator';
+const SITE = 'The Collaborator';
 
 /** Sets per-route title and social metadata. */
 @Injectable({ providedIn: 'root' })

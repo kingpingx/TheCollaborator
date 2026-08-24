@@ -58,7 +58,7 @@
       ]
     },
     "TheColloborator": {
-      "displayName": "The Colloborator",
+      "displayName": "The Collaborator",
       "tagline": "This site — a self-updating showcase of my GitHub projects.",
       "status": "live",
       "embeddable": true,
@@ -68,7 +68,7 @@
         "Tailwind CSS",
         "GitHub Actions"
       ],
-      "longDescription": "The site you are looking at right now.\n\nA GitHub profile is a list of repository names. It does not tell you which projects are finished, which you can actually try, or which would welcome help. The Colloborator is the page that answers those questions.\n\nThe project list is read straight from the GitHub API, so pushing a new repository is enough to make it appear here — there is no list to maintain by hand. A small curated file adds what GitHub cannot store: status, demo URL, screenshots, and what specifically needs doing.\n\nIt is a static Angular app with no backend. Feature ideas become GitHub issues, and the offline snapshot means the page still renders when the API is rate-limited.",
+      "longDescription": "The site you are looking at right now.\n\nA GitHub profile is a list of repository names. It does not tell you which projects are finished, which you can actually try, or which would welcome help. The Collaborator is the page that answers those questions.\n\nThe project list is read straight from the GitHub API, so pushing a new repository is enough to make it appear here — there is no list to maintain by hand. A small curated file adds what GitHub cannot store: status, demo URL, screenshots, and what specifically needs doing.\n\nIt is a static Angular app with no backend. Feature ideas become GitHub issues, and the offline snapshot means the page still renders when the API is rate-limited.",
       "lookingForHelp": true,
       "helpNotes": "Ideas for what a project showcase should surface are especially welcome — as are screenshots and better descriptions for any project listed here.",
       "roadmap": [

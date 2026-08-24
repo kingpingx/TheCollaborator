@@ -14,13 +14,13 @@ import { ThemeToggle } from '../shared/ui/theme-toggle';
       class="border-line bg-bg/80 sticky top-0 z-40 border-b backdrop-blur-md supports-[backdrop-filter]:bg-bg/70"
     >
       <div class="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
-        <a routerLink="/" class="group flex items-center gap-2.5" aria-label="The Colloborator, home">
+        <a routerLink="/" class="group flex items-center gap-2.5" aria-label="The Collaborator, home">
           <span
             class="bg-brand text-brand-fg flex h-8 w-8 items-center justify-center rounded-lg font-bold"
           >
             <app-icon name="sparkles" [size]="17" />
           </span>
-          <span class="text-content text-[15px] font-bold tracking-tight">The Colloborator</span>
+          <span class="text-content text-[15px] font-bold tracking-tight">The Collaborator</span>
         </a>
 
         <nav class="ml-4 hidden items-center gap-1 sm:flex" aria-label="Main">
