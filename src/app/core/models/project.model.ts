@@ -80,6 +80,11 @@ export interface ProjectOverride {
   tagline?: string;
   longDescription?: string;
   status?: ProjectStatus;
+  /**
+   * The demo's URL, or the literal `"self"` to point at this site — useful
+   * for the showcase's own entry, and it follows wherever the site is
+   * deployed instead of hardcoding a host.
+   */
   demoUrl?: string;
   /**
    * Whether the demo may be rendered in an iframe. Cross-origin
@@ -117,6 +122,8 @@ export interface Project {
   repoUrl: string;
   demoUrl: string | null;
   embeddable: boolean;
+  /** True when the demo is this site itself (`demoUrl: "self"`). */
+  selfDemo: boolean;
   media: ProjectMedia[];
 
   techStack: string[];

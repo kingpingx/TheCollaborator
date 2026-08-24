@@ -21,6 +21,7 @@ function project(overrides: Partial<Project> = {}): Project {
     repoUrl: 'https://github.com/kingpingx/Bouncing-Ball',
     demoUrl: null,
     embeddable: false,
+    selfDemo: false,
     media: [],
     techStack: [],
     primaryLanguage: 'Python',

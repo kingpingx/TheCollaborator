@@ -197,6 +197,46 @@ describe('ProjectService', () => {
     expect(service.projects()[0].demoUrl).toBeNull();
   });
 
+  describe('demoUrl: "self"', () => {
+    it('resolves to this site rather than a hardcoded host', async () => {
+      await loadWith(
+        { overrides: { 'sample-repo': { demoUrl: 'self', embeddable: true } } },
+        snapshot([repo()]),
+      );
+
+      const project = service.projects()[0];
+      expect(project.selfDemo).toBe(true);
+      expect(project.demoUrl).toBe(document.baseURI);
+    });
+
+    it('is case- and whitespace-insensitive', async () => {
+      await loadWith(
+        { overrides: { 'sample-repo': { demoUrl: '  SELF ' } } },
+        snapshot([repo()]),
+      );
+      expect(service.projects()[0].demoUrl).toBe(document.baseURI);
+    });
+
+    it('beats the repo homepage', async () => {
+      await loadWith(
+        { overrides: { 'sample-repo': { demoUrl: 'self' } } },
+        snapshot([repo({ homepage: 'https://elsewhere.example' })]),
+      );
+      expect(service.projects()[0].demoUrl).toBe(document.baseURI);
+    });
+
+    it('leaves ordinary demo URLs untouched', async () => {
+      await loadWith(
+        { overrides: { 'sample-repo': { demoUrl: 'https://myself.example' } } },
+        snapshot([repo()]),
+      );
+
+      const project = service.projects()[0];
+      expect(project.selfDemo).toBe(false);
+      expect(project.demoUrl).toBe('https://myself.example');
+    });
+  });
+
   it('derives the tech stack from languages, biggest first', async () => {
     await loadWith({}, snapshot([repo({ topics: [] })]));
     expect(service.projects()[0].techStack).toEqual(['TypeScript', 'CSS']);

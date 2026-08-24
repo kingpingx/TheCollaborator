@@ -11,7 +11,7 @@
       "tagline": "One line shown on the card. Falls back to the GitHub description.",
       "longDescription": "Shown on the detail page. Supports **bold**, *italic*, `code`, [links](https://example.com), - bullet lists and # headings.",
       "status": "One of: live, beta, wip, paused, archived, experiment. Otherwise inferred.",
-      "demoUrl": "Live demo URL. Falls back to the repo's GitHub homepage field.",
+      "demoUrl": "Live demo URL. Use the literal 'self' to point at this site (it follows wherever you deploy). Falls back to the repo's GitHub homepage field.",
       "embeddable": "true to render the demo in an iframe on the page. Leave false if the site sends X-Frame-Options or frame-ancestors, or it will show a blank box.",
       "media": "Screenshots/GIFs shown when the demo cannot be embedded. Paths are relative to public/, e.g. 'media/app-1.png'.",
       "techStack": "Overrides the stack derived from languages and topics.",
@@ -76,7 +76,8 @@
         "Prerender each project page so links preview properly when shared",
         "A tag/topic filter alongside language and status",
         "Dark-mode screenshots in the media galleries"
-      ]
+      ],
+      "demoUrl": "self"
     }
   }
 }

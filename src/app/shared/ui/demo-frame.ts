@@ -169,7 +169,11 @@ const LOAD_TIMEOUT_MS = 10_000;
         } @else {
           <div class="px-6 py-12 text-center">
             <p class="text-muted text-sm">
-              This demo opens in its own tab — it can't be embedded here.
+              @if (selfEmbedBlocked()) {
+                You're already looking at it — this is the site embedded in itself.
+              } @else {
+                This demo opens in its own tab — it can't be embedded here.
+              }
             </p>
             <a
               [href]="project().demoUrl"
@@ -204,8 +208,24 @@ export class DemoFrame {
     () => this.media()[this.activeIndex()],
   );
 
+  /**
+   * True when this page is itself running inside a frame. Used only to stop a
+   * self-demo from nesting: without it, opening this project *inside* the
+   * embedded copy would embed another copy, and so on down.
+   */
+  private readonly nested = ((): boolean => {
+    try {
+      return typeof window !== 'undefined' && window.self !== window.top;
+    } catch {
+      // Cross-origin parent — reading window.top throws, which itself means framed.
+      return true;
+    }
+  })();
+
+  protected readonly selfEmbedBlocked = computed(() => this.project().selfDemo && this.nested);
+
   protected readonly showFrame = computed(
-    () => this.project().embeddable && !!this.project().demoUrl,
+    () => this.project().embeddable && !!this.project().demoUrl && !this.selfEmbedBlocked(),
   );
 
   protected readonly hasAnything = computed(

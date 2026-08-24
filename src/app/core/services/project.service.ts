@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom, of } from 'rxjs';
@@ -41,6 +42,7 @@ const LIVE_TIMEOUT_MS = 8_000;
  */
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
+  private readonly document = inject(DOCUMENT);
   private readonly http = inject(HttpClient);
   private readonly api = inject(GithubApiService);
   private readonly config = inject(APP_CONFIG);
@@ -253,7 +255,14 @@ export class ProjectService {
   ): Project {
     const languages = snap?.languages ?? {};
     const topics = repo.topics ?? [];
-    const demoUrl = override?.demoUrl ?? this.normalizeUrl(repo.homepage);
+
+    // `demoUrl: "self"` points a project at this very site, so the showcase can
+    // demo itself without hardcoding a host — it follows the deployment.
+    const selfDemo = override?.demoUrl?.trim().toLowerCase() === 'self';
+    const demoUrl = selfDemo
+      ? this.siteUrl()
+      : (override?.demoUrl ?? this.normalizeUrl(repo.homepage));
+
     const curatedStatus = override?.status ?? this.statusFromTopics(topics);
 
     return {
@@ -269,6 +278,7 @@ export class ProjectService {
       repoUrl: repo.html_url,
       demoUrl,
       embeddable: override?.embeddable ?? false,
+      selfDemo,
       media: override?.media ?? [],
 
       techStack: override?.techStack ?? this.deriveTechStack(repo, languages, topics),
@@ -357,6 +367,14 @@ export class ProjectService {
       .replace(/\s+/g, ' ')
       .trim()
       .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  /**
+   * Where this site is served from — `<base href>` resolved against the
+   * origin, so it is correct in dev and under a project-page subpath alike.
+   */
+  private siteUrl(): string {
+    return this.document.baseURI ?? '/';
   }
 
   /** GitHub's `homepage` is free text and often missing its scheme. */
