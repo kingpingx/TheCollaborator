@@ -1,21 +1,22 @@
 {
   "_help": {
     "what": "Curated details that GitHub cannot store. Everything here is optional — a repo with no entry still renders from its API data alone.",
+    "firstPlaceToLook": "Before adding an entry here, fill the repo's About panel on github.com (the ⚙ beside 'About'). Its Description becomes the tagline, its Website becomes the demo URL (which alone is enough to mark a project 'live'), and its Topics feed the tech stack. Those show up on GitHub as well as here, so prefer them; this file is for the rest.",
     "keys": {
       "featured": "Repo names pinned to the home page, in this order.",
       "hidden": "Repo names never shown anywhere on the site.",
-      "overrides": "Per-repo curation, keyed by the exact repository name."
+      "overrides": "Per-repo curation, keyed by the exact repository name. A renamed repo silently loses its entry, so rename the key too."
     },
     "overrideFields": {
-      "displayName": "Replaces the auto-humanised repo name.",
-      "tagline": "One line shown on the card. Falls back to the GitHub description.",
-      "longDescription": "Shown on the detail page. Supports **bold**, *italic*, `code`, [links](https://example.com), - bullet lists and # headings.",
-      "status": "One of: live, beta, wip, paused, archived, experiment. Otherwise inferred.",
-      "demoUrl": "Live demo URL. Use the literal 'self' to point at this site (it follows wherever you deploy). Falls back to the repo's GitHub homepage field.",
+      "displayName": "Replaces the auto-humanised repo name. Only needed when humanising gets it wrong — 'Bouncing-Ball' already becomes 'Bouncing Ball' on its own.",
+      "tagline": "One line shown on the card. Prefer the GitHub description; set this only to say something different here.",
+      "longDescription": "Shown on the detail page as 'About this project'. GitHub has no equivalent, so this is the main reason to add an entry. Supports **bold**, *italic*, `code`, [links](https://example.com), - bullet lists and # headings.",
+      "status": "One of: live, beta, wip, paused, archived, experiment. Usually inferred — anything with a demo URL is already 'live'.",
+      "demoUrl": "Prefer the repo's Website field on GitHub. Set this to override it, or to the literal 'self' to point at this site (which follows wherever you deploy, and works in local dev).",
       "embeddable": "true to render the demo in an iframe on the page. Leave false if the site sends X-Frame-Options or frame-ancestors, or it will show a blank box.",
       "media": "Screenshots/GIFs shown when the demo cannot be embedded. Paths are relative to public/, e.g. 'media/app-1.png'.",
-      "techStack": "Overrides the stack derived from languages and topics.",
-      "lookingForHelp": "Flags the project as open to contributors.",
+      "techStack": "Overrides the stack derived from languages and topics. Worth setting when casing matters — a 'javascript' topic humanises to 'Javascript'.",
+      "lookingForHelp": "Flags the project as open to contributors. Already true for any repo with open 'good first issue' issues.",
       "helpNotes": "One or two sentences on what specifically needs doing.",
       "roadmap": "Bullet list rendered as 'What's next'.",
       "hideReadme": "true to omit the README section on the detail page."
@@ -23,7 +24,8 @@
     "alsoNote": "A repository can set its own status with a GitHub topic like 'status-live' or 'status-wip', which is handy for repos you do not want to list here."
   },
   "featured": [
-    "TheColloborator",
+    "TreeLibrary",
+    "TheCollaborator",
     "Bouncing-Ball",
     "kingpingx.github.io"
   ],
@@ -31,11 +33,37 @@
     "kingpingx"
   ],
   "overrides": {
+    "TreeLibrary": {
+      "displayName": "i2v-tree",
+      "embeddable": true,
+      "techStack": [
+        "Angular",
+        "TypeScript",
+        "Virtual Scrolling",
+        "Accessibility"
+      ],
+      "longDescription": "A single Angular component — `<i2v-tree>` — that renders arbitrarily large hierarchies without choking the application around it.\n\nVirtual scrolling solves rendering for **lists**. It does not solve it for **trees**: you cannot window a nested structure, and flattening one throws away the depth and parent/child relationships that made it a tree in the first place. The answer here is a three-step recipe — capture the hierarchy as metadata, flatten it to visible rows, then window the flat list — so roughly thirty rows exist in the DOM however big the tree gets.\n\nThe demo runs 100,000 real nodes with lazy-loaded branches and a side-by-side comparison of client-side against server-side search. A **Build a tree** panel generates a tree to whatever shape you describe, so you can try it at your own scale rather than mine.\n\nPast the one-line setup everything is opt-in: typed row templates, tri-state checkboxes that stay correct across lazy loading, drag and drop, keyboard navigation, and full `role=\"tree\"` ARIA semantics.\n\nThis is a fork of [gjcampbell/ooffice](https://github.com/gjcampbell/ooffice). The original `of-tree` library, its `Node`/`TreeQuery` traversal model and the `VirtualRenderArea` scroll maths are the work of Gabriel J. Campbell, and they held up well enough that this fork kept them essentially intact. The MIT licence and copyright are preserved."
+    },
+    "TheCollaborator": {
+      "demoUrl": "self",
+      "embeddable": true,
+      "techStack": [
+        "Angular",
+        "TypeScript",
+        "Tailwind CSS",
+        "GitHub Actions"
+      ],
+      "longDescription": "The site you are looking at right now.\n\nA GitHub profile is a list of repository names. It does not tell you which projects are finished, which you can actually try, or which would welcome help. The Collaborator is the page that answers those questions.\n\nThe project list is read straight from the GitHub API, so pushing a new repository is enough to make it appear here — there is no list to maintain by hand. Each repo's own About panel supplies its description, demo link and topics, and a small curated file adds the rest: long write-ups, screenshots, and what specifically needs doing.\n\nIt is a static Angular app with no backend. Feature ideas become GitHub issues, and the offline snapshot means the page still renders when the API is rate-limited.",
+      "lookingForHelp": true,
+      "helpNotes": "Ideas for what a project showcase should surface are especially welcome — as are screenshots and better descriptions for any project listed here.",
+      "roadmap": [
+        "Screenshot galleries for the projects that cannot be embedded",
+        "Prerender each project page so links preview properly when shared",
+        "A tag/topic filter alongside language and status",
+        "Dark-mode screenshots in the media galleries"
+      ]
+    },
     "Bouncing-Ball": {
-      "displayName": "Bouncing Ball",
-      "tagline": "A coordinate-geometry bouncing ball simulation you can run in the browser.",
-      "status": "live",
-      "demoUrl": "https://kingpingx.github.io/Bouncing-Ball/web/",
       "embeddable": true,
       "techStack": [
         "JavaScript",
@@ -47,37 +75,12 @@
     },
     "kingpingx.github.io": {
       "displayName": "Personal Site",
-      "tagline": "My portfolio — bio, experience, education and contact.",
-      "status": "live",
-      "demoUrl": "https://kingpingx.github.io",
       "embeddable": true,
       "techStack": [
         "HTML",
         "CSS",
         "JavaScript"
       ]
-    },
-    "TheColloborator": {
-      "displayName": "The Collaborator",
-      "tagline": "This site — a self-updating showcase of my GitHub projects.",
-      "status": "live",
-      "embeddable": true,
-      "techStack": [
-        "Angular",
-        "TypeScript",
-        "Tailwind CSS",
-        "GitHub Actions"
-      ],
-      "longDescription": "The site you are looking at right now.\n\nA GitHub profile is a list of repository names. It does not tell you which projects are finished, which you can actually try, or which would welcome help. The Collaborator is the page that answers those questions.\n\nThe project list is read straight from the GitHub API, so pushing a new repository is enough to make it appear here — there is no list to maintain by hand. A small curated file adds what GitHub cannot store: status, demo URL, screenshots, and what specifically needs doing.\n\nIt is a static Angular app with no backend. Feature ideas become GitHub issues, and the offline snapshot means the page still renders when the API is rate-limited.",
-      "lookingForHelp": true,
-      "helpNotes": "Ideas for what a project showcase should surface are especially welcome — as are screenshots and better descriptions for any project listed here.",
-      "roadmap": [
-        "Screenshot galleries for the projects that cannot be embedded",
-        "Prerender each project page so links preview properly when shared",
-        "A tag/topic filter alongside language and status",
-        "Dark-mode screenshots in the media galleries"
-      ],
-      "demoUrl": "self"
     }
   }
 }

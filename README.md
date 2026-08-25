@@ -1,6 +1,6 @@
 # The Collaborator
 
-### 🔗 [kingpingx.github.io/TheColloborator](https://kingpingx.github.io/TheColloborator/)
+### 🔗 [kingpingx.github.io/TheCollaborator](https://kingpingx.github.io/TheCollaborator/)
 
 **The Collaborator is a website that showcases my GitHub projects.**
 
